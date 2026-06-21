@@ -54,11 +54,15 @@
     <img src="https://www.image2url.com/r2/default/images/1779674994830-7dee927c-db20-412b-b153-cf2661a8e461.jpg" class="phantom-watermark w-[150%] md:w-[70%] object-contain pointer-events-none">
   </div>
 
+  <!-- WIDZZONE FIX: Navigasi Responsif dengan Hamburger Menu Premium -->
   <nav class="glass-nav w-full z-50 flex-none relative">
-    <div class="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 py-2 flex justify-between items-center relative z-20">
+      <!-- Logo Kiri -->
       <div class="flex items-center cursor-pointer group" onclick="switchView('view-landing')">
-        <img src="https://www.image2url.com/r2/default/images/1779674994830-7dee927c-db20-412b-b153-cf2661a8e461.jpg" class="h-12 md:h-14 blend-logo group-hover:scale-105 transition-transform duration-300">
+        <img src="https://www.image2url.com/r2/default/images/1779674994830-7dee927c-db20-412b-b153-cf2661a8e461.jpg" class="h-10 md:h-14 blend-logo group-hover:scale-105 transition-transform duration-300">
       </div>
+      
+      <!-- Menu Laptop/Desktop (Tersembunyi di HP) -->
       <div class="hidden md:flex items-center gap-8 text-[11px] font-bold text-bronze tracking-widest uppercase">
         <button onclick="switchView('view-landing')" class="hover:text-fire transition-colors">Beranda</button>
         <button onclick="switchView('view-gallery')" class="hover:text-fire transition-colors"><i class="fa-solid fa-play mr-1"></i> Cinematic</button>
@@ -67,9 +71,25 @@
         <div class="w-px h-4 bg-slate-800"></div>
         <button onclick="switchView('view-login')" class="text-fire hover:text-bronze transition-colors"><i class="fa-solid fa-lock text-sm"></i></button>
       </div>
+
+      <!-- Tombol Hamburger khusus HP -->
+      <button onclick="toggleMobileMenu()" class="md:hidden text-bronze text-2xl hover:text-fire transition-colors focus:outline-none">
+          <i id="mobileMenuIcon" class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- Papan Laci Menu Dropdown HP (Tersembunyi Awalnya) -->
+    <div id="mobileMenu" class="absolute top-full left-0 w-full bg-slate-950/95 backdrop-blur-xl border-b border-bronze/20 shadow-2xl transition-all duration-300 ease-in-out origin-top transform scale-y-0 opacity-0 z-10 hidden md:hidden">
+      <div class="flex flex-col items-center gap-5 py-6 text-[10px] font-black text-bronze tracking-[0.2em] uppercase">
+        <button onclick="switchMobileView('view-landing')" class="hover:text-fire transition-colors w-full py-2">Beranda</button>
+        <button onclick="switchMobileView('view-gallery')" class="hover:text-fire transition-colors w-full py-2"><i class="fa-solid fa-play mr-1"></i> Cinematic</button>
+        <button onclick="switchMobileView('view-form')" class="hover:text-fire transition-colors w-full py-2">Beli Tiket</button>
+        <button onclick="switchMobileView('view-tracker')" class="hover:text-fire transition-colors w-full py-2">Cek Tiket</button>
+        <div class="w-16 h-px bg-slate-800 my-1"></div>
+        <button onclick="switchMobileView('view-login')" class="text-fire hover:text-bronze transition-colors w-full py-2"><i class="fa-solid fa-lock mr-1"></i> Admin Login</button>
+      </div>
     </div>
   </nav>
-
   <main class="flex-grow w-full relative z-10 flex items-center justify-center px-4 overflow-hidden">
 
     <!-- WIDZZONE FIX: Membuka kunci scroll vertikal khusus mobile & mengatur jarak aman dari footer -->
@@ -454,6 +474,35 @@
       
       if (viewId === 'view-admin') loadAdminData();
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    // WIDZZONE FIX: Fungsi Pengendali Menu Animasi HP
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        const icon = document.getElementById('mobileMenuIcon');
+        
+        if (menu.classList.contains('hidden')) {
+            // Buka Laci
+            menu.classList.remove('hidden');
+            setTimeout(() => {
+                menu.classList.remove('scale-y-0', 'opacity-0');
+                menu.classList.add('scale-y-100', 'opacity-100');
+            }, 10);
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-xmark'); // Ubah ikon jadi silang (X)
+        } else {
+            // Tutup Laci
+            menu.classList.remove('scale-y-100', 'opacity-100');
+            menu.classList.add('scale-y-0', 'opacity-0');
+            icon.classList.remove('fa-xmark');
+            icon.classList.add('fa-bars'); // Ubah kembali ke garis 3
+            setTimeout(() => { menu.classList.add('hidden'); }, 300);
+        }
+    }
+
+    // Menutup menu otomatis setelah pengunjung mengeklik salah satu tab di HP
+    function switchMobileView(viewId) {
+        switchView(viewId);
+        toggleMobileMenu(); 
     }
     
     function resetTracker() {
