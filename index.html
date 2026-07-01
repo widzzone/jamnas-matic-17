@@ -394,6 +394,40 @@
         ctx.save();
       }
     };
+    // WIDZZONE FIX: Mengembalikan Fungsi Pop-Up Modal yang Hilang
+    function showModal(title, message, type, confirmCallback = null) {
+      const modal = document.getElementById('customModal');
+      const icon = document.getElementById('modalIcon');
+      const titleEl = document.getElementById('modalTitle');
+      const msgEl = document.getElementById('modalMessage');
+      const btns = document.getElementById('modalButtons');
+
+      titleEl.innerText = title;
+      msgEl.innerText = message;
+      btns.innerHTML = ''; 
+
+      if (type === 'error') {
+        icon.innerHTML = '<i class="fa-solid fa-circle-exclamation text-cherry"></i>';
+        titleEl.className = "text-xl font-black text-cherry uppercase tracking-widest mb-2";
+        btns.innerHTML = `<button onclick="hideModal()" class="px-8 py-3 border border-slate-600 text-slate-300 font-bold rounded-xl hover:bg-slate-800 transition-colors uppercase text-xs tracking-widest cursor-pointer">TUTUP</button>`;
+      } 
+      else if (type === 'confirm') {
+        icon.innerHTML = '<i class="fa-solid fa-shield-halved text-neon-teal"></i>';
+        titleEl.className = "text-xl font-black text-neon-teal uppercase tracking-widest mb-2";
+        
+        window.tempConfirmCallback = confirmCallback;
+        
+        btns.innerHTML = `
+          <button onclick="hideModal()" class="px-6 py-3 border border-slate-600 text-slate-400 font-bold rounded-xl hover:bg-slate-800 hover:text-white transition-colors uppercase text-xs tracking-widest cursor-pointer">BATAL</button>
+          <button onclick="hideModal(); window.tempConfirmCallback();" class="px-6 py-3 bg-neon-teal text-slate-900 font-black rounded-xl hover:bg-white transition-colors uppercase text-xs tracking-widest shadow-[0_0_15px_rgba(45,212,191,0.4)] cursor-pointer">YA, SETUJUI</button>
+        `;
+      }
+      modal.classList.add('active');
+    }
+
+    function hideModal() {
+      document.getElementById('customModal').classList.remove('active');
+    }
 
     function updateDisplayHarga() {
       const totalBayar = baseNominal + uniqueCode;
