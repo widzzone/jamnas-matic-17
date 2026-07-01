@@ -160,7 +160,7 @@
     <div id="view-form" class="view-section hidden max-w-md w-full glass-card p-6 rounded-3xl fade-in h-auto max-h-full overflow-y-auto relative z-20">
       <h2 class="text-2xl font-black text-white tracking-wide uppercase text-center mb-6 title-grad relative z-20">Pemesanan</h2>
       
-      <form id="regForm" class="space-y-3 relative z-20">
+     <form id="regForm" class="space-y-3 relative z-20" onsubmit="kirimRegistrasi(event)">
         <div><label class="block text-slate-300 mb-1 text-[10px] font-bold uppercase tracking-wider">Nama Sesuai KTP</label><input type="text" name="nama" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 focus:border-fire outline-none transition-all text-white text-sm uppercase relative z-30"></div>
         
         <div><label class="block text-slate-300 mb-1 text-[10px] font-bold uppercase tracking-wider">Asal Daerah / Kota</label><input type="text" name="daerah" required placeholder="Contoh: BOGOR / JAKARTA SELATAN" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 focus:border-fire outline-none transition-all text-white text-sm uppercase relative z-30"></div>
@@ -205,7 +205,7 @@
       <div id="trackerSearchBox" class="glass-card p-6 rounded-3xl text-center relative z-30">
           <div class="w-12 h-12 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center mx-auto mb-3 border-bronze/40"><i class="fa-solid fa-search text-xl text-bronze"></i></div>
           <h2 class="text-xl font-black text-white tracking-widest uppercase mb-4 title-grad">Lacak Tiket</h2>
-          <form id="trackerForm" class="space-y-3 relative z-40">
+          <form id="trackerForm" class="space-y-3 relative z-40" onsubmit="lacakTiket(event)">
             <input type="email" id="trackEmail" required placeholder="Email Saat Mendaftar" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-center focus:border-fire outline-none text-white text-xs font-bold uppercase relative z-50">
             <input type="number" id="trackWa" required placeholder="No WhatsApp" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-center focus:border-fire outline-none text-white text-xs font-bold uppercase relative z-50">
             <button type="submit" class="w-full bronze-fire-gradient text-black font-black py-3 rounded-xl uppercase tracking-widest text-xs mt-2 hover:scale-105 transition-transform cursor-pointer relative z-50">CARI TIKET SAYA</button>
@@ -262,7 +262,7 @@
         </div>
         <div class="relative group inline-block"><h2 class="text-lg font-bold text-white title-lettering text-transparent bg-clip-text title-grad" data-text="DASHBOARD">DASHBOARD</h2></div>
       </div>
-      <form id="loginForm" class="space-y-3 w-full relative z-30">
+      <form id="loginForm" class="space-y-3 w-full relative z-30" onsubmit="loginAdmin(event)">
         <input type="text" id="adminUser" required placeholder="Username" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 focus:border-neon-teal outline-none text-center text-white text-sm relative z-40">
         <input type="password" id="adminPass" required placeholder="Password" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 focus:border-neon-teal outline-none text-center text-white text-sm relative z-40">
         <button type="submit" id="btnLogin" class="w-full bg-neon-teal text-slate-900 font-black py-3 rounded-xl uppercase tracking-widest text-xs mt-2 transition-all hover:bg-white hover:scale-105 shadow-[0_0_15px_rgba(45,212,191,0.4)] cursor-pointer relative z-40">VERIFIKASI AKSES</button>
@@ -355,45 +355,12 @@
   </main>
 
   <script>
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwzQhSfcTChTjg5uA8-ikQpsLpOYENYOcA4slWT7bjLaLRVhprrS_FVxgmwFAS-IUL5BQ/exec";
+    // =========================================================================
+    // WIDZZONE DECOUPLED API CONFIGURATION
+    // =========================================================================
+    // WAJIB: Ganti kode di bawah ini dengan URL Web App (Deploy Baru) dari Apps Script Anda!
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz1234567890_CONTOH_URL_DEPLOY_BARU_ANDA/exec"; 
 
-    function showModal(title, message, type, confirmCallback = null) {
-      const modal = document.getElementById('customModal');
-      const icon = document.getElementById('modalIcon');
-      const titleEl = document.getElementById('modalTitle');
-      const msgEl = document.getElementById('modalMessage');
-      const btns = document.getElementById('modalButtons');
-
-      titleEl.innerText = title;
-      msgEl.innerText = message;
-      btns.innerHTML = ''; 
-
-      if (type === 'error') {
-        icon.innerHTML = '<i class="fa-solid fa-circle-exclamation text-cherry"></i>';
-        titleEl.className = "text-xl font-black text-cherry uppercase tracking-widest mb-2";
-        btns.innerHTML = `<button onclick="hideModal()" class="px-8 py-3 border border-slate-600 text-slate-300 font-bold rounded-xl hover:bg-slate-800 transition-colors uppercase text-xs tracking-widest cursor-pointer">TUTUP</button>`;
-      } 
-      else if (type === 'confirm') {
-        icon.innerHTML = '<i class="fa-solid fa-shield-halved text-neon-teal"></i>';
-        titleEl.className = "text-xl font-black text-neon-teal uppercase tracking-widest mb-2";
-        
-        window.tempConfirmCallback = confirmCallback;
-        
-        btns.innerHTML = `
-          <button onclick="hideModal()" class="px-6 py-3 border border-slate-600 text-slate-400 font-bold rounded-xl hover:bg-slate-800 hover:text-white transition-colors uppercase text-xs tracking-widest cursor-pointer">BATAL</button>
-          <button onclick="hideModal(); window.tempConfirmCallback();" class="px-6 py-3 bg-neon-teal text-slate-900 font-black rounded-xl hover:bg-white transition-colors uppercase text-xs tracking-widest shadow-[0_0_15px_rgba(45,212,191,0.4)] cursor-pointer">YA, SETUJUI</button>
-        `;
-      }
-
-      modal.classList.add('active');
-    }
-
-    function hideModal() {
-      document.getElementById('customModal').classList.remove('active');
-    }
-  </script>
-
-  <script>
     let uniqueCode = Math.floor(Math.random() * 900) + 100; 
     let baseNominal = 50000; 
     let currentTicketType = 'UMUM';
@@ -402,25 +369,21 @@
     const gaugeTextPlugin = {
       id: 'gaugeText',
       beforeDraw: function(chart) {
-        const { ctx, chartArea: { top, bottom, left, right, width, height } } = chart;
+        const { ctx, chartArea: { bottom, left, width, height } } = chart;
         ctx.restore();
-        
         const dataSet = chart.data.datasets[0].data;
         const verified = dataSet[0] || 0;
         const pending = dataSet[1] || 0;
         const total = verified + pending;
         let percentage = 0;
         if(total > 0) percentage = Math.round((verified / total) * 100);
-
         const textX = left + width / 2;
         const textY = bottom; 
-
         ctx.font = '900 ' + (height * 0.35).toFixed(2) + 'px "Font Awesome 6 Free"';
         ctx.fillStyle = '#2dd4bf';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'bottom';
         ctx.fillText('\uf00c', textX, textY - (height * 0.40)); 
-
         ctx.font = '900 ' + (height * 0.55).toFixed(2) + 'px Urbanist';
         ctx.fillStyle = '#ffffff';
         ctx.textBaseline = 'bottom';
@@ -428,7 +391,6 @@
         ctx.shadowBlur = 4;
         ctx.fillText(percentage + '%', textX, textY + (height * 0.08)); 
         ctx.shadowBlur = 0; 
-        
         ctx.save();
       }
     };
@@ -438,15 +400,13 @@
       const elHarga = document.getElementById('displayHarga');
       const elJenis = document.getElementById('displayJenis');
       if(elHarga) elHarga.innerText = 'Rp ' + totalBayar.toLocaleString('id-ID');
-      
       if(baseNominal === 50000) {
          elHarga.className = "text-2xl font-black text-white leading-none";
          elJenis.className = "text-[8px] text-white font-bold bg-slate-800 inline-block px-1.5 py-0.5 rounded mt-1 border border-slate-600";
       } else {
-         elHarga.className = "text-2xl font-black text-neon-teal leading-none";
+         elHarga.className = "text-2xl font-black text-neon-teal Rust leading-none";
          elJenis.className = "text-[8px] text-neon-teal font-bold bg-neon-teal/10 inline-block px-1.5 py-0.5 rounded mt-1 border border-neon-teal/30";
       }
-      
       const elUnique = document.getElementById('displayUnique');
       if(elUnique) elUnique.innerHTML = `*Termasuk Kode Verifikasi: <b class="text-fire">${uniqueCode}</b>`;
     }
@@ -456,56 +416,22 @@
     function switchView(viewId) {
       const iframe = document.getElementById('mainDriveVideo');
       if (iframe) { let currentSrc = iframe.src; iframe.src = ''; iframe.src = currentSrc; }
-
       document.querySelectorAll('.view-section').forEach(v => v.classList.add('hidden'));
       document.getElementById(viewId).classList.remove('hidden');
-      
       if(viewId !== 'view-admin') {
         resetTracker(); 
-        
         document.getElementById('promoMsg').classList.add('hidden');
         document.getElementById('promoMsg').innerText = '';
         document.getElementById('inputPromo').value = '';
         document.getElementById('inputPromo').disabled = false;
         document.getElementById('btnPromo').classList.remove('hidden');
-        
         currentTicketType = 'UMUM';
         baseNominal = 50000;
         document.getElementById('displayJenis').innerText = 'Tipe: ' + currentTicketType;
         updateDisplayHarga();
       }
-      
       if (viewId === 'view-admin') loadAdminData();
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    // WIDZZONE FIX: Fungsi Pengendali Menu Animasi HP
-    function toggleMobileMenu() {
-        const menu = document.getElementById('mobileMenu');
-        const icon = document.getElementById('mobileMenuIcon');
-        
-        if (menu.classList.contains('hidden')) {
-            // Buka Laci
-            menu.classList.remove('hidden');
-            setTimeout(() => {
-                menu.classList.remove('scale-y-0', 'opacity-0');
-                menu.classList.add('scale-y-100', 'opacity-100');
-            }, 10);
-            icon.classList.remove('fa-bars');
-            icon.classList.add('fa-xmark'); // Ubah ikon jadi silang (X)
-        } else {
-            // Tutup Laci
-            menu.classList.remove('scale-y-100', 'opacity-100');
-            menu.classList.add('scale-y-0', 'opacity-0');
-            icon.classList.remove('fa-xmark');
-            icon.classList.add('fa-bars'); // Ubah kembali ke garis 3
-            setTimeout(() => { menu.classList.add('hidden'); }, 300);
-        }
-    }
-
-    // Menutup menu otomatis setelah pengunjung mengeklik salah satu tab di HP
-    function switchMobileView(viewId) {
-        switchView(viewId);
-        toggleMobileMenu(); 
     }
     
     function resetTracker() {
@@ -521,22 +447,37 @@
       switchView('view-landing'); 
     }
 
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        const icon = document.getElementById('mobileMenuIcon');
+        if (menu.classList.contains('hidden')) {
+            menu.classList.remove('hidden');
+            setTimeout(() => { menu.classList.remove('scale-y-0', 'opacity-0'); menu.classList.add('scale-y-100', 'opacity-100'); }, 10);
+            icon.className = 'fa-solid fa-xmark';
+        } else {
+            menu.classList.remove('scale-y-100', 'opacity-100'); menu.classList.add('scale-y-0', 'opacity-0');
+            icon.className = 'fa-solid fa-bars';
+            setTimeout(() => { menu.classList.add('hidden'); }, 300);
+        }
+    }
+
+    function switchMobileView(viewId) { switchView(viewId); toggleMobileMenu(); }
+
+    // =========================================================================
+    // INTERAKSI DATA VIA API (FETCH ENGINE)
+    // =========================================================================
     function applyPromo() {
       const code = document.getElementById('inputPromo').value; 
       const btn = document.getElementById('btnPromo'); 
       const msgBox = document.getElementById('promoMsg');
-      
       if(!code) return;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; btn.disabled = true; msgBox.classList.add('hidden');
       
-      // WIDZZONE VERCEL API FETCH
-      fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: 'validatePromo', code: code }) })
+      fetch(GAS_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'validatePromo', code: code }) })
         .then(r => r.json()).then(res => {
           btn.innerHTML = 'Gunakan'; btn.disabled = false; msgBox.classList.remove('hidden');
           if(res.success) {
-            currentTicketType = res.data.jenis; 
-            baseNominal = res.data.hargaBase;
-            updateDisplayHarga();
+            currentTicketType = res.data.jenis; baseNominal = res.data.hargaBase; updateDisplayHarga();
             document.getElementById('displayJenis').innerText = 'Tipe: ' + currentTicketType;
             msgBox.innerText = res.data.pesan; msgBox.className = "text-[9px] mt-1 font-semibold text-neon-teal"; 
             document.getElementById('inputPromo').disabled = true; btn.classList.add('hidden');
@@ -546,142 +487,103 @@
         }).catch(() => { btn.innerHTML = 'Gunakan'; btn.disabled = false; });
     }
 
-    document.getElementById('trackerForm').onsubmit = (e) => {
-      e.preventDefault(); 
+    function kirimRegistrasi(e) {
+      e.preventDefault();
+      const btnSubmit = document.getElementById('btnSubmit');
+      btnSubmit.disabled = true; 
+      document.getElementById('regForm').classList.add('hidden'); 
+      document.getElementById('form-loader').classList.remove('hidden');
+      
+      const reader = new FileReader();
+      reader.onload = (f) => {
+        const data = { 
+          nama: document.querySelector('[name="nama"]').value, email: document.querySelector('[name="email"]').value, 
+          wa: document.querySelector('[name="wa"]').value, daerah: document.querySelector('[name="daerah"]').value, 
+          uniqueCode: uniqueCode, hargaBase: baseNominal, totalBayar: baseNominal + uniqueCode, jenisTiket: currentTicketType, bukti_file: f.target.result 
+        };
+        
+        fetch(GAS_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'register', data: data }) })
+          .then(r => r.json()).then((res) => {
+            document.getElementById('form-loader').classList.add('hidden'); 
+            if(res.status === 'success') {
+               document.getElementById('form-success').classList.remove('hidden'); 
+               document.getElementById('regForm').reset(); 
+            } else {
+               showModal("Gagal Mengirim", res.message, "error");
+               btnSubmit.disabled = false; document.getElementById('regForm').classList.remove('hidden'); 
+            }
+          }).catch(() => { btnSubmit.disabled = false; document.getElementById('regForm').classList.remove('hidden'); document.getElementById('form-loader').classList.add('hidden'); showModal("Error", "Gagal terhubung ke Google Sheets.", "error"); });
+      };
+      
+      const fileInputElement = document.getElementById('fileInput').files[0];
+      if(fileInputElement) { reader.readAsDataURL(fileInputElement); } 
+      else { showModal("Peringatan", "Mohon upload file bukti transfer terlebih dahulu.", "error"); btnSubmit.disabled = false; document.getElementById('regForm').classList.remove('hidden'); document.getElementById('form-loader').classList.add('hidden'); }
+    }
+
+    function lacakTiket(e) {
+      e.preventDefault();
       const email = document.getElementById('trackEmail').value; 
       const wa = document.getElementById('trackWa').value;
-      
       document.getElementById('trackerSearchBox').classList.add('hidden');
       document.getElementById('tracker-loader').classList.remove('hidden');
       
-      // WIDZZONE VERCEL API FETCH
-      fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: 'track', email: email, wa: wa }) })
+      fetch(GAS_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'track', email: email, wa: wa }) })
         .then(r => r.json()).then(res => {
           document.getElementById('tracker-loader').classList.add('hidden');
           if(res.success) {
             document.getElementById('resNama').innerText = res.nama; 
             document.getElementById('resJenis').innerText = res.jenis;
-            
             const sBox = document.getElementById('resStatusBox'); 
-            
             if(res.status === 'APPROVED') {
-              sBox.className = "inline-flex items-center gap-1.5 px-3 py-1 bg-neon-teal/10 border border-neon-teal/30 rounded-full text-[9px] font-black tracking-widest uppercase text-neon-teal"; 
-              sBox.innerHTML = '<i class="fa-solid fa-check"></i> VERIFIED';
+              sBox.className = "inline-flex items-center gap-1.5 px-3 py-1 bg-neon-teal/10 border border-neon-teal/30 rounded-full text-[9px] font-black tracking-widest uppercase text-neon-teal"; sBox.innerHTML = '<i class="fa-solid fa-check"></i> VERIFIED';
               document.getElementById('resQr').src = res.qrCodeUrl; 
               document.getElementById('resTicketId').innerText = res.ticketId; 
               document.getElementById('resNRA').innerText = res.nra ? res.nra : "DALAM PROSES";
-              
-              document.getElementById('resApprovedSection').classList.remove('hidden'); 
-              document.getElementById('resPendingSection').classList.add('hidden');
+              document.getElementById('resApprovedSection').classList.remove('hidden'); document.getElementById('resPendingSection').classList.add('hidden');
               document.getElementById('ticketGlow').className = "absolute -inset-1 bg-gradient-to-b from-bronze to-neon-teal rounded-[2rem] blur opacity-40 group-hover:opacity-70 transition duration-1000 pointer-events-none z-0";
             } else {
-              sBox.className = "inline-flex items-center gap-1.5 px-3 py-1 bg-fire/10 border border-fire/30 rounded-full text-[9px] font-black tracking-widest uppercase text-fire"; 
-              sBox.innerHTML = '<i class="fa-solid fa-clock"></i> PENDING';
-              
-              document.getElementById('resApprovedSection').classList.add('hidden'); 
-              document.getElementById('resPendingSection').classList.remove('hidden');
+              sBox.className = "inline-flex items-center gap-1.5 px-3 py-1 bg-fire/10 border border-fire/30 rounded-full text-[9px] font-black tracking-widest uppercase text-fire"; sBox.innerHTML = '<i class="fa-solid fa-clock"></i> PENDING';
+              document.getElementById('resApprovedSection').classList.add('hidden'); document.getElementById('resPendingSection').classList.remove('hidden');
               document.getElementById('ticketGlow').className = "absolute -inset-1 bg-gradient-to-b from-fire to-cherry rounded-[2rem] blur opacity-40 group-hover:opacity-70 transition duration-1000 pointer-events-none z-0";
             }
             document.getElementById('tracker-result').classList.remove('hidden');
-          } else { 
-            showModal("Tidak Ditemukan", res.message, "error");
-            document.getElementById('trackerSearchBox').classList.remove('hidden');
-          }
-        }).catch(() => {
-            showModal("Error Jaringan", "Gagal menghubungi server.", "error");
-            document.getElementById('trackerSearchBox').classList.remove('hidden');
-            document.getElementById('tracker-loader').classList.add('hidden');
-        });
-    };
+          } else { showModal("Tidak Ditemukan", res.message, "error"); document.getElementById('trackerSearchBox').classList.remove('hidden'); }
+        }).catch(() => { document.getElementById('tracker-loader').classList.add('hidden'); document.getElementById('trackerSearchBox').classList.remove('hidden'); showModal("Error", "Gagal melacak tiket.", "error"); });
+    }
 
-    document.getElementById('trackerForm').onsubmit = (e) => {
-      e.preventDefault(); 
-      const email = document.getElementById('trackEmail').value; 
-      const wa = document.getElementById('trackWa').value;
-      
-      document.getElementById('trackerSearchBox').classList.add('hidden');
-      document.getElementById('tracker-loader').classList.remove('hidden');
-      
-      // WIDZZONE VERCEL API FETCH
-      fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: 'track', email: email, wa: wa }) })
-        .then(r => r.json()).then(res => {
-          document.getElementById('tracker-loader').classList.add('hidden');
-          if(res.success) {
-            document.getElementById('resNama').innerText = res.nama; 
-            document.getElementById('resJenis').innerText = res.jenis;
-            
-            const sBox = document.getElementById('resStatusBox'); 
-            
-            if(res.status === 'APPROVED') {
-              sBox.className = "inline-flex items-center gap-1.5 px-3 py-1 bg-neon-teal/10 border border-neon-teal/30 rounded-full text-[9px] font-black tracking-widest uppercase text-neon-teal"; 
-              sBox.innerHTML = '<i class="fa-solid fa-check"></i> VERIFIED';
-              document.getElementById('resQr').src = res.qrCodeUrl; 
-              document.getElementById('resTicketId').innerText = res.ticketId; 
-              document.getElementById('resNRA').innerText = res.nra ? res.nra : "DALAM PROSES";
-              
-              document.getElementById('resApprovedSection').classList.remove('hidden'); 
-              document.getElementById('resPendingSection').classList.add('hidden');
-              document.getElementById('ticketGlow').className = "absolute -inset-1 bg-gradient-to-b from-bronze to-neon-teal rounded-[2rem] blur opacity-40 group-hover:opacity-70 transition duration-1000 pointer-events-none z-0";
-            } else {
-              sBox.className = "inline-flex items-center gap-1.5 px-3 py-1 bg-fire/10 border border-fire/30 rounded-full text-[9px] font-black tracking-widest uppercase text-fire"; 
-              sBox.innerHTML = '<i class="fa-solid fa-clock"></i> PENDING';
-              
-              document.getElementById('resApprovedSection').classList.add('hidden'); 
-              document.getElementById('resPendingSection').classList.remove('hidden');
-              document.getElementById('ticketGlow').className = "absolute -inset-1 bg-gradient-to-b from-fire to-cherry rounded-[2rem] blur opacity-40 group-hover:opacity-70 transition duration-1000 pointer-events-none z-0";
-            }
-            document.getElementById('tracker-result').classList.remove('hidden');
-          } else { 
-            showModal("Tidak Ditemukan", res.message, "error");
-            document.getElementById('trackerSearchBox').classList.remove('hidden');
-          }
-        }).catch(() => {
-            showModal("Error Jaringan", "Gagal menghubungi server.", "error");
-            document.getElementById('trackerSearchBox').classList.remove('hidden');
-            document.getElementById('tracker-loader').classList.add('hidden');
-        });
-    };
-
-    document.getElementById('loginForm').onsubmit = (e) => {
-      e.preventDefault(); 
+    function loginAdmin(e) {
+      e.preventDefault();
       const user = document.getElementById('adminUser').value; 
       const pass = document.getElementById('adminPass').value;
       const btn = document.getElementById('btnLogin');
-      
       btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>'; btn.disabled = true; 
       
-      // WIDZZONE VERCEL API FETCH
-      fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: 'verifyAdmin', user: user, pass: pass }) })
+      fetch(GAS_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'verifyAdmin', user: user, pass: pass }) })
         .then(r => r.json()).then(res => {
           btn.innerHTML = 'VERIFIKASI AKSES'; btn.disabled = false; 
-          if(res.success) switchView('view-admin'); 
-          else showModal("Akses Ditolak", res.message, "error"); 
-        }).catch(() => {
-          btn.innerHTML = 'VERIFIKASI AKSES'; btn.disabled = false; 
-          showModal("Error Jaringan", "Gagal menghubungi server pusat.", "error");
-        });
-    };
+          if(res.success) switchView('view-admin'); else { showModal("Akses Ditolak", res.message, "error"); } 
+        }).catch(() => { btn.innerHTML = 'VERIFIKASI AKSES'; btn.disabled = false; showModal("Error", "Gagal verifikasi.", "error"); });
+    }
 
     function loadAdminData() { 
       document.getElementById('tableBody').innerHTML = `<tr><td colspan="4" class="p-10 text-center"><div class="animate-spin rounded-full h-10 w-10 border-b-2 border-neon-teal mx-auto mb-3"></div><p class="text-neon-teal mt-2 text-[10px] font-bold tracking-widest animate-pulse">SINKRONISASI DATACENTER...</p></td></tr>`; 
-      
-      // WIDZZONE VERCEL API FETCH
-      fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: 'getAdmin' }) })
-        .then(r => r.json()).then(data => { 
-          renderTable(data); 
-          renderAnalytics(data); 
-        }).catch(() => {
-          document.getElementById('tableBody').innerHTML = `<tr><td colspan="4" class="p-10 text-center text-cherry font-bold">Gagal mengambil data dari server.</td></tr>`;
-        }); 
+      fetch(GAS_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'getAdmin' }) })
+        .then(r => r.json()).then(data => { renderTable(data); renderAnalytics(data); }).catch(() => { document.getElementById('tableBody').innerHTML = `<tr><td colspan="4" class="p-10 text-center text-cherry font-bold">Gagal sinkronisasi data.</td></tr>`; });
+    }
+
+    function approveTicket(row, email, nama, ticketId, btn) { 
+      showModal("Konfirmasi Validasi", `Anda akan mengirimkan E-Ticket Resmi JAMNAS ke:\n\n${nama}\n\nPastikan mutasi dana sudah masuk ke rekening.`, "confirm", function() {
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; btn.disabled = true; 
+        fetch(GAS_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'approve', row: row, email: email, nama: nama, ticketId: ticketId }) })
+          .then(r => r.json()).then(res => { loadAdminData(); });
+      });
     }
 
     function renderTable(data) {
       const tbody = document.getElementById('tableBody'); tbody.innerHTML = ''; if(data.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-10 text-center text-slate-500 font-semibold italic">Belum ada antrean validasi.</td></tr>`; return; }
       data.forEach(item => {
         let badge = item.status === 'APPROVED' ? `<span class="px-3 py-1.5 bg-neon-teal/10 text-neon-teal rounded text-[9px] font-black tracking-widest border border-neon-teal/30"><i class="fa-solid fa-check mr-1"></i>VERIFIED</span>` : `<span class="px-3 py-1.5 bg-slate-700/50 text-slate-400 rounded text-[9px] font-black tracking-widest border border-slate-600">PENDING</span>`;
-        
         let action = item.status === 'APPROVED' ? `<span class="text-slate-600 text-[10px] font-black italic border-b border-slate-700">TERKIRIM</span>` : `<button onclick="approveTicket(${item.row}, '${item.email}', '${item.nama}', '${item.ticketId}', this)" class="bg-slate-800 text-neon-teal text-[9px] font-black py-2 px-5 rounded-lg shadow-md uppercase transition-all border border-slate-600 hover:border-neon-teal hover:shadow-[0_0_10px_rgba(45,212,191,0.2)] cursor-pointer">Setujui <i class="fa-solid fa-arrow-right ml-1"></i></button>`;
-        
         tbody.innerHTML += `
           <tr class="hover:bg-slate-800/40 transition-colors group data-row">
             <td class="p-5"><div class="text-xs text-slate-400 font-medium">${item.timestamp}</div><div class="mt-2 text-[9px] font-black text-slate-300 uppercase bg-slate-800 inline-block px-2 py-0.5 rounded border border-slate-700">${item.jenis}</div></td>
@@ -700,69 +602,22 @@
 
     function renderAnalytics(data) {
         let t = data.length, v = 0, p = 0, d = 0; 
-        data.forEach(item => { 
-            if(item.status === 'APPROVED') { d += parseInt(item.total) || 0; v++; } else { p++; } 
-        });
-        
+        data.forEach(item => { if(item.status === 'APPROVED') { d += parseInt(item.total) || 0; v++; } else { p++; } });
         let pctV = t > 0 ? Math.round((v/t)*100) : 0;
         let pctP = t > 0 ? Math.round((p/t)*100) : 0;
-
         document.getElementById('kpi-total').innerText = t; 
         document.getElementById('kpi-dana').innerText = 'Rp ' + d.toLocaleString('id-ID'); 
         document.getElementById('kpi-pending').innerText = p;
-        
         document.getElementById('legend-verified').innerText = `Verified (${pctV}%)`;
         document.getElementById('legend-pending').innerText = `Pending (${pctP}%)`;
-        
         const ctxStatus = document.getElementById('statusChart').getContext('2d'); 
         if(myGaugeChart) { myGaugeChart.destroy(); }
-        
         myGaugeChart = new Chart(ctxStatus, { 
             type: 'doughnut', 
-            data: { 
-                labels: ['Verified', 'Pending'], 
-                datasets: [{ 
-                    data: [v, p === 0 && v === 0 ? 1 : p], 
-                    backgroundColor: v === 0 && p === 0 ? ['#334155'] : ['#2dd4bf', '#334155'], 
-                    borderColor: ['#0f172a', '#0f172a'],
-                    borderWidth: 8,
-                    borderRadius: 15,
-                }] 
-            }, 
-            options: { 
-                responsive: true, 
-                maintainAspectRatio: true, 
-                aspectRatio: 2,            
-                rotation: 270, 
-                circumference: 180, 
-                cutout: '85%',             
-                layout: {
-                  padding: { bottom: 0 }
-                },
-                plugins: { 
-                    legend: { display: false },
-                    tooltip: { enabled: false } 
-                } 
-            },
+            data: { labels: ['Verified', 'Pending'], datasets: [{ data: [v, p === 0 && v === 0 ? 1 : p], backgroundColor: v === 0 && p === 0 ? ['#334155'] : ['#2dd4bf', '#334155'], borderColor: ['#0f172a', '#0f172a'], borderWidth: 8, borderRadius: 15 }] }, 
+            options: { responsive: true, maintainAspectRatio: true, aspectRatio: 2, rotation: 270, circumference: 180, cutout: '85%', layout: { padding: { bottom: 0 } }, plugins: { legend: { display: false }, tooltip: { enabled: false } } },
             plugins: [gaugeTextPlugin] 
         });
-    }
-
-    function approveTicket(row, email, nama, ticketId, btn) { 
-      showModal("Konfirmasi Validasi", `Anda akan mengirimkan E-Ticket Resmi JAMNAS ke:\n\n${nama}\n\nPastikan mutasi dana sudah masuk ke rekening.`, "confirm", function() {
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; 
-        btn.disabled = true; 
-        
-        // WIDZZONE VERCEL API FETCH
-        fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: 'approve', row: row, email: email, nama: nama, ticketId: ticketId }) })
-          .then(r => r.json()).then(res => { 
-             loadAdminData(); 
-          }).catch(() => {
-             showModal("Error", "Gagal menyetujui tiket.", "error");
-             btn.innerHTML = 'Setujui <i class="fa-solid fa-arrow-right ml-1"></i>'; 
-             btn.disabled = false;
-          });
-      });
     }
   </script>
   <footer class="w-full flex-none flex justify-center pb-4 pt-1 relative z-[60]">
